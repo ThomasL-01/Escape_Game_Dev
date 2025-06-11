@@ -8,11 +8,11 @@ import javax.swing.*;
 
 public class Builder extends JPanel{
 	private int x,y;  //position
+	private boolean bloqueur = false;
 
     public Builder() {
         setOpaque(false); 
-        Dimension ecran = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(0, 0, ecran.width, ecran.height); //les mêmes que la fenêtre
+        setBounds(0, 0, 1280,720); //les mêmes que la fenêtre
         setFocusable(true); // Récupère le clavier
         requestFocusInWindow(); // Assure que le panneau a le focus
         
@@ -20,11 +20,14 @@ public class Builder extends JPanel{
             @Override
             public void keyPressed(java.awt.event.KeyEvent e) {
                 int input = e.getKeyCode();
-                if (input == KeyEvent.VK_D&&x<ecran.width-200) {       //déplacement en ZQSD
+                if (bloqueur) {
+                	return;
+                }
+                if (input == KeyEvent.VK_D&&x<1200) {       //déplacement en ZQSD
                     x += 10;
-                } else if (input == KeyEvent.VK_Q&&x>200) {
+                } else if (input == KeyEvent.VK_Q&&x>20) {
                     x -= 10;
-                } else if (input == KeyEvent.VK_S&&y<ecran.height-200) {
+                } else if (input == KeyEvent.VK_S&&y<650) {
                     y += 10;
                 } else if (input == KeyEvent.VK_Z&&y>200) {
                     y -= 10;
@@ -33,6 +36,10 @@ public class Builder extends JPanel{
             }
         });
     }
+    
+    public void setBloqueur(boolean bloqueur) {
+    	this.bloqueur=bloqueur;
+    }
 	
 	public void setPosition(int x,int y) {
 		this.x=x;
@@ -40,12 +47,20 @@ public class Builder extends JPanel{
 		repaint();
 	}
 	
-	Image image = new ImageIcon(System.getProperty("user.home")+"\\Documents\\baton.png").getImage();
+	public int getPositionX() {
+		return this.x;
+	}
+	
+	public int getPositionY() {
+		return this.y;
+	}
+	
+	Image image = new ImageIcon(System.getProperty("user.home")+"\\Documents\\perso.png").getImage();
 			
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(image,x,y,100,100,null);
+		g.drawImage(image,x,y,40,50,null);
 	}
 	
 	public void run() {

@@ -3,6 +3,7 @@ package escapeGame;
 public class Cryptage {
 	private String message;
 	private int decalage;
+	private boolean resolu=false;
 	
 	public Cryptage(String message, int decalage) {
 		this.message=message;
@@ -15,6 +16,14 @@ public class Cryptage {
 	
 	public int getDecalage() {
 		return this.decalage;
+	}
+	
+	public boolean getResolu() {
+		return this.resolu;
+	}
+	
+	public void setResolu(boolean resolu) {
+		this.resolu=resolu;
 	}
 	
 	

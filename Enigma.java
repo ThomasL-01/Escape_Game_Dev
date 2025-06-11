@@ -7,6 +7,7 @@ public class Enigma {
 	private String dossier;
     private String nomFichier;
     private String chemin = dossier + nomFichier;
+    private boolean resolu=false;
         
     public Enigma(String dossier, String nomFichier) {
     	this.dossier = dossier;
@@ -18,7 +19,14 @@ public class Enigma {
     	return this.chemin;
     }
     
+	public boolean getResolu() {
+		return this.resolu;
+	}
     
+	public void setResolu(boolean resolu) {
+		this.resolu=resolu;
+	}
+	
     public void creerMDP() {
     	try {
     		File repertoire = new File(this.dossier);
