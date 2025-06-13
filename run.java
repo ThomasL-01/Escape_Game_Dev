@@ -10,7 +10,6 @@ public class run {
     	SwingUtilities.invokeLater(() -> {
     		Fenetre fenetre1 = new Fenetre();
     		fenetre1.setVisible(true);
-    		
     	});
     }
 }

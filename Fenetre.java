@@ -45,14 +45,21 @@ public class Fenetre extends JFrame{
         bouton1.setVisible(false);
         add(bouton1);
         
+        
+        
         JButton bouton2 = new JButton("Interagir");
         bouton2.setBounds(950,160,100,20);
         bouton2.setVisible(false);
         add(bouton2);
         
+        ImageIcon interaction = new ImageIcon(System.getProperty("user.home")+"\\Documents\\interagir.png");
+        
+        
+        Enigme2 enigme2Panel = new Enigme2();
+        
         //Personnage
         Builder perso = new Builder();
-        perso.setPosition(580,400);
+        perso.setPosition(700,200);
         
         add(perso);
         perso.requestFocusInWindow(); //Force le focus
@@ -62,6 +69,7 @@ public class Fenetre extends JFrame{
         getRootPane().getActionMap().put("escapePressed", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setContentPane(background);
                 background.setIcon(new ImageIcon(System.getProperty("user.home") + "\\Documents\\fond.png"));
                 perso.setBloqueur(false);
                 checkBouton1=false;
@@ -100,7 +108,6 @@ public class Fenetre extends JFrame{
                 	bouton1.setVisible(false);
                 	bouton2.setVisible(false);
                 	background.setIcon(new ImageIcon(System.getProperty("user.home")+"\\Documents\\fond.png"));
-    
                 }      
             }
         });
@@ -116,18 +123,41 @@ public class Fenetre extends JFrame{
         });
         
         bouton2.addActionListener(b -> {
-        	
-        	background.setIcon(new ImageIcon(System.getProperty("user.home")+"\\Documents\\damn-bird.png"));
-        	perso.setBloqueur(true);
-            checkBouton2 = true;
-            perso.setVisible(false);
+        	if (enigme2Panel.getVerifOrdre()==-1) {
+        		perso.setBloqueur(true);
+        		checkBouton2 = true;
+        		perso.setVisible(false);
+        		setContentPane(enigme2Panel);
+        		revalidate();
+        		repaint();
+        	}
+        	else {
+        		bouton2.setVisible(false);
+        	}
         });
-       
+        
+        ImageIcon deux = new ImageIcon(System.getProperty("user.home")+"\\Documents\\torche\\vert2.png");
+        JLabel labelZ = new JLabel(deux);
+        labelZ.setBounds(590,100,100,100);
+        labelZ.setVisible(false);
+        
+        enigme2Panel.getBouton().addActionListener (b -> {
+        	enigme2Panel.verifier2();
+        	System.out.println(enigme2Panel.getVerifOrdre());
+        	if(enigme2Panel.getVerifOrdre()==0) {
+        		labelZ.setVisible(true);
+        	}
+        	if (enigme2Panel.getVerifOrdre()>0) {
+        		enigme2Panel.setVerifOrdre(-1);
+        	}
+        });
+
         
               
 
         // Ajouter les composants créés précédemment
         background.setVisible(true);
         add(labelTime);
+        add(labelZ);
 	}
 }
