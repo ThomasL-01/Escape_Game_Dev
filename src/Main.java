@@ -15,19 +15,28 @@ public class Main extends JPanel implements KeyListener {
     Set<Character> touches = new HashSet<>();
 
     ArrayList<Block> blocks = new ArrayList<>();
+    private JFrame frame;
+    private JLayeredPane lay;
 
-
-    public Main() {
+    public Main(JFrame frame, JLayeredPane layeredPane) {
+        this.frame = frame;
+        this.lay = layeredPane;
         this.personnage = new Personnage(500, 500);
-        setFocusable(true);
-        addKeyListener(this);
 
+        setFocusable(true);
+        addKeyListener(this);        
+
+        // On place les blocs aux bons endroits et on les ajoute à la liste
+        InteractionBlock enigme1 = new InteractionBlock(200, 200, frame, layeredPane); 
+        blocks.add(enigme1);
+
+
+        // On affiche le fond
         try {
             imageFond = ImageIO.read(new File("src\\graphics\\bg.png")); // mets ton chemin exact ici
         } catch (IOException e) {
             System.out.println("Erreur chargement fond : " + e.getMessage());
         }
-
 
         // Rafraîchissement automatique pour animation
         Timer timer = new Timer(35, e -> repaint());
@@ -37,7 +46,7 @@ public class Main extends JPanel implements KeyListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-         if (imageFond != null) {
+        if (imageFond != null) {
             g.drawImage(imageFond, 0, 0, getWidth(), getHeight(), null);
         }
 
@@ -47,6 +56,7 @@ public class Main extends JPanel implements KeyListener {
         for (Block b : blocks) {
             b.dessiner(g);
         }
+
         isCollidingWithBlock();
     }
 
@@ -68,24 +78,38 @@ public class Main extends JPanel implements KeyListener {
         for (Block b : blocks) {
             if (personnage.getBounds().intersects(b.getBounds())) {
                 switch (b.getType()) {
-                    case 1: // Type 1 = mur
-                        System.out.println("⚠ Collision avec un mur !");
-                        break;
+                    case 0: // Type 0 = interaction spéciale
+                            b.setActive(true); // Active l'interaction
+                            b.appearence(); // Appel de la méthode d'apparition
+                            break;
                     // Ajouter d'autres types de blocs si nécessaire
                     default:
                         System.out.println("⚠ Collision avec un bloc de type " + b.getType() + " !");
-                }            }
+                }            
+            } else {
+                b.setActive(false); // Désactive l'interaction si pas en collision
+                b.appearence(); // Met à jour l'apparence du bloc
+            }
+           
         }
     }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Jeu escape game");
-        Main panel = new Main();
         
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(1280, 720));
+        
+        Main panel = new Main(frame, layeredPane);
+
         frame.setSize(1280, 720);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
-        frame.add(panel);
+        panel.setBounds(0, 0, 1280, 720); // Nécessaire pour l'affichage dans le LayeredPane
+        layeredPane.add(panel, Integer.valueOf(1)); // Layer 1 = au-dessus de l’image de fond
+
+        frame.setContentPane(layeredPane);
+
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }

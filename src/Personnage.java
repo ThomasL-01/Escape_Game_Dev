@@ -101,7 +101,6 @@ public class Personnage {
             droite = true;
         }
 
-        // Animation selon direction horizontale
         if (gauche) {
             etat = "left";
         } else if (droite) {
